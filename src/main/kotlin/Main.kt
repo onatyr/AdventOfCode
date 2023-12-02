@@ -1,3 +1,4 @@
 fun main() {
-    print(readAndSum())
+//    print(trebuchet())
+    print(cubeConundrum())
 }
