@@ -39,10 +39,10 @@ fun checkPossible(line: String): Int {
 }
 
 fun cubeConundrum(): Int {
-    var accu = 0
+    var acc = 0
     File("src/main/kotlin/cubeInput").forEachLine {
 //        accu += checkPossible(it)
-        accu += powerOfSets(it)
+        acc += powerOfSets(it)
     }
-    return accu
+    return acc
 }
