@@ -4,5 +4,6 @@ fun main() {
 //    print(gearRatio())
 //    print(cardPile())
 //    print(seedLocation())
-    print(fastBoat())
+//    print(fastBoat())
+    print(camelCards())
 }
