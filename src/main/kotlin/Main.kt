@@ -3,5 +3,6 @@ fun main() {
 //    print(cubeConundrum())
 //    print(gearRatio())
 //    print(cardPile())
-    print(seedLocation())
+//    print(seedLocation())
+    print(fastBoat())
 }

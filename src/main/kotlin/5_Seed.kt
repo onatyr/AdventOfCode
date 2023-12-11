@@ -70,7 +70,6 @@ fun seedLocation(): Long {
         val newRange = LongRange(seedsString[i].toLong(),seedsString[i].toLong() + seedsString[i+1].toLong())
         seedsRangeListPt2.add(newRange)
     }
-//    println(seedsList.size)
 
     var continueLoop = true
     var init = 46.toLong()
