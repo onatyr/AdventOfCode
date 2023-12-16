@@ -1,13 +1,15 @@
 import java.io.File
 
 class Hand(handString: String) {
-    val handValue = handString
-    val cardList = listOf('2', '3', '4', '5', '6', '7', '8', '9', 'T', 'J', 'Q', 'K', 'A')
+    val handValue = handString.filterNot { it == 'J' }
+    val cardList = listOf('J', '2', '3', '4', '5', '6', '7', '8', '9', 'T', 'Q', 'K', 'A')
     val handIntValue = handString.toCharArray().map { cardList.indexOf(it) }
+    val jokers = handString.count { it == 'J' }
     val typeValue = type()
 
 
     private fun type(): Int {
+        if (jokers == 5) return 7
         if (isFive()) return 7
         if (isFour()) return 6
         if (isHouse()) return 5
@@ -20,38 +22,43 @@ class Hand(handString: String) {
 
 
     private fun isFive(): Boolean {
-        return handValue.count { it == handValue.first() } == 5
+        val counts = handValue.groupBy { it }.values.map { it.size }.toMutableList()
+        counts[counts.indexOf(counts.max())] += jokers
+        return counts.any { it == 5 }
     }
 
     private fun isFour(): Boolean {
-        if (handValue.count { it == handValue.first() } == 4) return true
-        else if (handValue.count { it == handValue.last() } == 4) return true
-        return false
+        val counts = handValue.groupBy { it }.values.map { it.size }.toMutableList()
+        counts[counts.indexOf(counts.max())] += jokers
+        return counts.any { it == 4 }
     }
 
     private fun isHouse(): Boolean {
-        for (char in handValue) {
-            if (handValue.count { it == char } !in 2..3) return false
-        }
-        return true
+        val counts = handValue.groupBy { it }.values.map { it.size }.toMutableList()
+        counts[counts.indexOf(counts.max())] += jokers
+        return counts.any { it == 3 } && counts.any { it == 2 }
     }
 
     private fun isThree(): Boolean {
-        return (handValue.any { e -> handValue.count { it == e } == 3 } && handValue.any { e -> handValue.count { it == e } == 1 })
+        val counts = handValue.groupBy { it }.values.map { it.size }.toMutableList()
+        counts[counts.indexOf(counts.max())] += jokers
+        return counts.any { it == 3 }
     }
 
     private fun isTwoPair(): Boolean {
-        val counts = handValue.groupBy { it }.values.map { it.size }
-        return (counts.count { it == 2 } == 2)
+        val counts = handValue.groupBy { it }.values.map { it.size }.toMutableList()
+        counts[counts.indexOf(counts.max())] += jokers
+        return counts.count { it == 2 } == 2
     }
 
     private fun isOnePair(): Boolean {
-        val counts = handValue.groupBy { it }.values.map { it.size }
-        return (counts.count { it == 2 } == 1 && counts.count { it == 1 } == 3)
+        val counts = handValue.groupBy { it }.values.map { it.size }.toMutableList()
+        counts[counts.indexOf(counts.max())] += jokers
+        return counts.count { it == 2 } == 1
     }
 
     private fun isHigh(): Boolean {
-        return !handValue.any { e -> handValue.count { it == e } != 1 }
+        return !handValue.any { e -> handValue.count { it == e } != 1 } && jokers == 0
     }
 }
 
