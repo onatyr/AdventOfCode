@@ -5,5 +5,6 @@ fun main() {
 //    print(cardPile())
 //    print(seedLocation())
 //    print(fastBoat())
-    print(camelCards())
+//    print(camelCards())
+    print(hauntedWasteland())
 }
