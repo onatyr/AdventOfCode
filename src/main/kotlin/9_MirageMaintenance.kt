@@ -1,6 +1,16 @@
 import java.io.File
 
-fun addNewValues(allSubValues: MutableList<MutableList<Int>>): MutableList<MutableList<Int>> {
+fun addNewValuesStart(allSubValues: MutableList<MutableList<Int>>): MutableList<MutableList<Int>> {
+    val newSubValuesList = allSubValues.reversed().toMutableList()
+
+    for (i in 1..<newSubValuesList.size) {
+        newSubValuesList[i] = (mutableListOf(newSubValuesList[i].first() - newSubValuesList[i - 1].first()) + newSubValuesList[i]).toMutableList()
+    }
+
+    return newSubValuesList
+}
+
+fun addNewValuesEnd(allSubValues: MutableList<MutableList<Int>>): MutableList<MutableList<Int>> {
     val newSubValuesList = allSubValues.reversed().toMutableList()
 
     for (i in 1..<newSubValuesList.size) {
@@ -35,7 +45,7 @@ fun findNext(line: String): Long {
         allSubValues.add(deltasList(allSubValues.last()))
     }
 
-    return addNewValues(allSubValues).last().last().toLong()
+    return addNewValuesStart(allSubValues).last().first().toLong()
 }
 
 fun mirageMaintenance(): Long {
