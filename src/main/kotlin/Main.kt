@@ -6,5 +6,7 @@ fun main() {
 //    print(seedLocation())
 //    print(fastBoat())
 //    print(camelCards())
-    print(hauntedWasteland())
+//    print(hauntedWasteland())
+    print(mirageMaintenance())
 }
+
