@@ -2,15 +2,16 @@ import java.io.File
 
 fun parseGalaxies(sky: MutableList<MutableList<Char>>): MutableList<Pair<Int, Int>> {
     val list = emptyList<Pair<Int, Int>>().toMutableList()
-    for (i in sky.indices){
-        for(j in sky[i].indices){
-            if(sky[i][j] == '#'){
-                list.add(Pair(i,j))
+    for (i in sky.indices) {
+        for (j in sky[i].indices) {
+            if (sky[i][j] == '#') {
+                list.add(Pair(i, j))
             }
         }
     }
     return list
 }
+
 fun addColumns(sky: MutableList<MutableList<Char>>): MutableList<MutableList<Char>> {
     var newSky = sky
 
@@ -29,6 +30,7 @@ fun addColumns(sky: MutableList<MutableList<Char>>): MutableList<MutableList<Cha
 
     return newSky
 }
+
 fun checkEmptyColumn(sky: MutableList<MutableList<Char>>, columnIndex: Int): Boolean {
     for (i in sky.indices) {
         if (sky[i][columnIndex] == '#') {
@@ -38,24 +40,44 @@ fun checkEmptyColumn(sky: MutableList<MutableList<Char>>, columnIndex: Int): Boo
     return true
 }
 
-fun cosmicExpansion(): Int {
+fun cosmicExpansion(): Long {
     var sky = emptyList<MutableList<Char>>().toMutableList()
+    var lineExpandedIndex = emptyList<Int>().toMutableList()
+    var columnExpandedIndex = emptyList<Int>().toMutableList()
+
+    var lineIndex = 0
     File("src/main/kotlin/cosmicInput").forEachLine {
         sky.add(it.toMutableList())
         if (!it.contains("#".toRegex())) {
-            sky.add(it.toMutableList())
+            lineExpandedIndex.add(lineIndex)
+//            sky.add(it.toMutableList())
+        }
+        lineIndex++
+    }
+
+//    sky = addColumns(sky)
+    for (i in sky.first().indices) {
+        if (checkEmptyColumn(sky, i)) {
+            columnExpandedIndex.add(i)
         }
     }
 
-    sky = addColumns(sky)
     val galaxiesList = parseGalaxies(sky)
 
-    var pathSum = 0
-    for (i in 0..<galaxiesList.size){
+    var pathSum: Long = 0
+    for (i in 0..<galaxiesList.size) {
         val firstGalaxy = galaxiesList[i]
-        for (j in i+1..<galaxiesList.size){
+
+        for (j in i + 1..<galaxiesList.size) {
             val secondGalaxy = galaxiesList[j]
-            pathSum += kotlin.math.abs(secondGalaxy.first - firstGalaxy.first) + kotlin.math.abs(secondGalaxy.second - firstGalaxy.second)
+
+            val lineRange = minOf(secondGalaxy.first, firstGalaxy.first)..maxOf(secondGalaxy.first, firstGalaxy.first)
+            val columnRange =
+                minOf(secondGalaxy.second, firstGalaxy.second)..maxOf(secondGalaxy.second, firstGalaxy.second)
+
+            val multiple = lineExpandedIndex.count { it in lineRange } + columnExpandedIndex.count { it in columnRange }
+
+            pathSum += kotlin.math.abs(lineRange.first - lineRange.last) + kotlin.math.abs(columnRange.first - columnRange.last) + (multiple * 1000000) - multiple
         }
 
     }
