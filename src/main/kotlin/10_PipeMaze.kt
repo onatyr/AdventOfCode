@@ -1,9 +1,49 @@
 import java.io.File
 
+fun loopArea(mazeLine: MutableList<Case>, case: Case): Boolean {
+
+    var count = 0
+    var betweenExtremities = false
+    var previousExtremityDirection = ""
+    for (i in case.location.second + 1..<mazeLine.size) {
+
+        if (mazeLine[i].extremity) {
+            val currentExtremityDirection = when (mazeLine[i].string) {
+                "7" -> "bottom"
+                "F" -> "bottom"
+                "L" -> "top"
+                "J" -> "top"
+                else -> ""
+            }
+
+            if (betweenExtremities && previousExtremityDirection != currentExtremityDirection) {
+                count++
+            }
+
+            betweenExtremities = !betweenExtremities
+            previousExtremityDirection = currentExtremityDirection
+
+        }
+        if (mazeLine[i].inTheLoop && !betweenExtremities && !mazeLine[i].extremity) {
+            count++
+        }
+    }
+    return count % 2 == 1
+}
+
 class Case(line: Int, column: Int, connexionString: String) {
 
     val location = Pair(line, column)
     val string = connexionString
+    var inTheLoop = false
+    var extremity = false
+
+    fun looped() {
+        inTheLoop = true
+        if (string != "|" && string != "-") {
+            extremity = true
+        }
+    }
 
     val left = Pair(location.first, location.second - 1)
     val right = Pair(location.first, location.second + 1)
@@ -11,17 +51,17 @@ class Case(line: Int, column: Int, connexionString: String) {
     val bottom = Pair(location.first + 1, location.second)
 
     val connexions = listOfConnexions()
-    fun listOfConnexions(): List<Pair<Int, Int>> {
-        lateinit var result: List<Pair<Int, Int>>
-        when (string) {
-            "7" -> result = listOf(left, bottom)
-            "J" -> result = listOf(top, left)
-            "F" -> result = listOf(bottom, right)
-            "L" -> result = listOf(top, right)
-            "|" -> result = listOf(top, bottom)
-            "-" -> result = listOf(left, right)
-            "S" -> result = listOf(top, right)
-            else -> result = emptyList<Pair<Int, Int>>()
+    val connexionString = emptyList<String>().toMutableList()
+    private fun listOfConnexions(): List<Pair<Int, Int>> {
+        val result = when (string) {
+            "7" -> listOf(left, bottom)
+            "J" -> listOf(top, left)
+            "F" -> listOf(bottom, right)
+            "L" -> listOf(top, right)
+            "|" -> listOf(top, bottom)
+            "-" -> listOf(left, right)
+            "S" -> listOf(top, right)
+            else -> emptyList()
         }
         return result
     }
@@ -50,12 +90,25 @@ fun pipeMaze(): Int {
     var loopSize = 0
 
     while (!(currentCase.string == "S" && loopSize > 0)) {
-        val nextLocation = currentCase.connexions.filter { it != previousLocation }.first()
+        maze[currentCase.location.first][currentCase.location.second].looped()
+        val nextLocation = currentCase.connexions.first { it != previousLocation }
         previousLocation = currentCase.location
         currentCase = maze[nextLocation.first][nextLocation.second]
 
         loopSize++
     }
-    return loopSize/2
+
+    var inArea = 0
+
+    maze.forEach {
+        for (case in it) {
+            if (!case.inTheLoop && loopArea(it, case)) {
+                inArea++
+            }
+        }
+    }
+
+
+    return inArea
 
 }
