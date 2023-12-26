@@ -8,6 +8,7 @@ fun main() {
 //    print(camelCards())
 //    print(hauntedWasteland())
 //    print(mirageMaintenance())
-    print(pipeMaze())
+//    print(pipeMaze())
+    print(cosmicExpansion())
 }
 
