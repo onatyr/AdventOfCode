@@ -7,6 +7,7 @@ fun main() {
 //    print(fastBoat())
 //    print(camelCards())
 //    print(hauntedWasteland())
-    print(mirageMaintenance())
+//    print(mirageMaintenance())
+    print(pipeMaze())
 }
 
