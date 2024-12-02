@@ -1,3 +1,5 @@
+package year2023
+
 import java.io.File
 
 data class Seed(val number: Long, var location: Long)

@@ -1,3 +1,5 @@
+package year2023
+
 import java.io.File
 
 fun parseGalaxies(sky: MutableList<MutableList<Char>>): MutableList<Pair<Int, Int>> {
